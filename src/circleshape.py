@@ -1,26 +1,27 @@
-from typing import ClassVar
+from abc import ABC, abstractmethod
+from typing import Any, ClassVar
 
 import pygame
 
 
 # Base class for game objects
-class CircleShape(pygame.sprite.Sprite):
-    containers: ClassVar[tuple]
+class CircleShape(pygame.sprite.Sprite, ABC):
+    containers: ClassVar[tuple[pygame.sprite.Group[Any], ...]]
 
-    def __init__(self, x, y, radius):
+    def __init__(self, position: pygame.Vector2, radius: float) -> None:
         groups = getattr(self.__class__, "containers", ())
         super().__init__(*groups)
 
-        self.position = pygame.Vector2(x, y)
-        self.velocity = pygame.Vector2(0, 0)
-        self.radius = radius
+        self.position: pygame.Vector2 = position
+        self.velocity: pygame.Vector2 = pygame.Vector2(0, 0)
+        self.radius: float = radius
 
-    def draw(self, screen):
-        # must override
+    @abstractmethod
+    def draw(self, screen: pygame.Surface) -> None:
         pass
 
-    def update(self, dt):
-        # must override
+    @abstractmethod
+    def update(self, dt: float) -> None:
         pass
 
     def collides_with(self, other: CircleShape) -> bool:

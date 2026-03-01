@@ -2,6 +2,7 @@ import inspect
 import json
 import math
 from datetime import datetime
+from typing import Any
 
 __all__ = ["log_state", "log_event"]
 
@@ -15,7 +16,7 @@ _event_log_initialized = False
 _start_time = datetime.now()
 
 
-def log_state():
+def log_state() -> None:
     global _frame_count, _state_log_initialized
 
     # Stop logging after `_MAX_SECONDS` seconds
@@ -40,7 +41,7 @@ def log_state():
     local_vars = frame_back.f_locals.copy()
 
     screen_size = []
-    game_state = {}
+    game_state: dict[str, dict[str, Any]] = {}
 
     for key, value in local_vars.items():
         if "pygame" in str(type(value)) and hasattr(value, "get_size"):
@@ -99,7 +100,7 @@ def log_state():
 
             game_state[key] = sprite_info
 
-    entry = {
+    entry: dict[str, Any] = {
         "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
         "elapsed_s": math.floor((now - _start_time).total_seconds()),
         "frame": _frame_count,
@@ -115,12 +116,12 @@ def log_state():
     _state_log_initialized = True
 
 
-def log_event(event_type, **details):
+def log_event(event_type: str, **details: dict[str, Any]) -> None:
     global _event_log_initialized
 
     now = datetime.now()
 
-    event = {
+    event: dict[str, Any] = {
         "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
         "elapsed_s": math.floor((now - _start_time).total_seconds()),
         "frame": _frame_count,

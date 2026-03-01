@@ -10,5 +10,5 @@ dependencies = [
 
 [tool.ruff]
 select = ["E", "F", "I"]  
-unfixable = ["F401"]
+unfixable = ["F401", "F841"]
 fix = true
