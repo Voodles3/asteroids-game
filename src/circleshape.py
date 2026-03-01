@@ -5,8 +5,7 @@ import pygame
 
 # Base class for game objects
 class CircleShape(pygame.sprite.Sprite):
-    # Subclasses can set this from main, e.g. Player.containers = (updatable, drawable)
-    containers: ClassVar[tuple[pygame.sprite.AbstractGroup, ...]]
+    containers: ClassVar[tuple]
 
     def __init__(self, x, y, radius):
         groups = getattr(self.__class__, "containers", ())
@@ -23,3 +22,8 @@ class CircleShape(pygame.sprite.Sprite):
     def update(self, dt):
         # must override
         pass
+
+    def collides_with(self, other: CircleShape) -> bool:
+        if self.position.distance_to(other.position) < (self.radius + other.radius):
+            return True
+        return False
